@@ -1,0 +1,32 @@
+{
+  "name": "codfrm/wnm",
+  "description": "一个php实现的服务器管理面板",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "CodFrm",
+      "email": "code.farmer@qq.com",
+      "homepage": "https://blog.icodef.com"
+    }
+  ],
+  "require": {
+    "php": "^7.1",
+    "huanlphp/container": "dev-master",
+    "ext-sqlite3": "*"
+  },
+  "require-dev": {
+    "eaglewu/swoole-ide-helper": "dev-master",
+    "phpunit/phpunit": "^7.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/",
+      "WNPanel\\Core\\": "core/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "WNPanel\\Core\\Tests\\": "tests/"
+    }
+  }
+}
