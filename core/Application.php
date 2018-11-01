@@ -66,9 +66,8 @@ class Application extends Container {
         ]);
         $http->on('request', function (\swoole_http_request $request, \swoole_http_response $response) {
             //TODO: deal route
-            ob_start();
             Route::resolve($request, $response);
-            $response->end(ob_get_clean());
+            $response->end();
         });
         $http->start();
     }
@@ -80,6 +79,9 @@ class Application extends Container {
             $instance = new $value();
             if ($instance instanceof LoadInterface) {
                 $instance->init();
+                \WNPanel\Core\Facade\Route::group(function () use ($instance) {
+                    $instance->route();
+                });
             } else {
                 throw new \Exception($value . ' is error');
             }

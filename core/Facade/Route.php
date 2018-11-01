@@ -16,7 +16,7 @@ namespace WNPanel\Core\Facade;
  * @method static \WNPanel\Core\Route\Route get(string $url, $controller)
  * @method static \WNPanel\Core\Route\Route post(string $url, $controller)
  * @method static \WNPanel\Core\Route\Route any(string $url, $controller)
- * @method static \WNPanel\Core\Route\Route group(string $url, $controller)
+ * @method static \WNPanel\Core\Route\Group group(\Closure $func = null)
  * Class Route
  * @package WNPanel\Core\Facade
  */

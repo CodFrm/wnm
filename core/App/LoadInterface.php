@@ -14,4 +14,6 @@ namespace WNPanel\Core\App;
 
 interface LoadInterface {
     public function init();
+
+    public function route();
 }

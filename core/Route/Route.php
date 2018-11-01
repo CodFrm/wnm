@@ -21,19 +21,42 @@ class Route {
 
     protected static $groupName = 'default';
 
-    protected static $route = [];
+    /**
+     * @var Group
+     */
+    protected static $group = null;
 
-    public function group(\Closure $func) {
+    public static $route = [];
+
+    public function __construct() {
+        if (is_null(static::$group)) {
+            static::$group = new Group(static::$groupName, static::$route);
+        }
+    }
+
+    public function group($func = null) {
+        if (empty($func)) {
+            return new Group(static::$groupName);
+        }
+        if (is_string($func)) {
+            static::$groupName = $func;
+            static::$group = new Group($func, static::$route);
+            return static::$group;
+        }
         static $n = 0;
         $n++;
+        $tmp_group = static::$group;
         $tmp_groupName = static::$groupName;
+
         static::$groupName = 'group_' . $n;
-        $tmp_route =& static::$route;
-        static::$route = &static::$route[$tmp_groupName]['group'];
-        $group = new Group(static::$groupName, $tmp_groupName);
+        static::$route[$tmp_groupName]['group'] = [static::$groupName => []];
+        $group = new Group(static::$groupName, static::$route[$tmp_groupName]['group']);
+
+        static::$group = $group;
         call_user_func($func, $group);
         static::$groupName = $tmp_groupName;
-        static::$route = &$tmp_route;
+        static::$group = $tmp_group;
+
         return $group;
     }
 
@@ -50,40 +73,59 @@ class Route {
     }
 
     protected function addRoute(array $methods, string $url, $controller) {
-        foreach ($methods as $value) {
-            $value = strtoupper($value);
-            if (in_array($value, static::$method)) {
-                static::$route[static::$groupName]['method'][$value][$url]['controller'] = $controller;
-            }
-        }
+        static::$group->addRoute($methods, $url, $controller);
         return $this;
     }
 
     public static function resolve(\swoole_http_request $request, \swoole_http_response $response) {
         $method = strtoupper($request->server['request_method']);
-        $param = static::$route['default']['param'] ?? [];
-        if (($param = static::recursive_resolve(static::$route['default'], $method, $request->server['path_info'], $param)) !== false) {
-            $ret = app()->call($param['param']['controller'], $param['uri_param']);
-            if (is_string($ret)) {
-                $response->header("content-type","text/html;charset=utf8");
-                $response->write($ret);
+        foreach (static::$route as $value) {
+            $param = $value['param'] ?? [];
+            if (($param = static::recursive_resolve($value, $method, $request->server['path_info'], $param)) !== false) {
+                static::deal_controller($request, $response, $param);
+                return true;
             }
-        } else {
-            $response->status(404);
+        }
+        $response->status(404);
+        return false;
+    }
+
+    private static function deal_controller(\swoole_http_request $request, \swoole_http_response $response, $param) {
+        //加载中间件和处理命名空间
+        $ret = null;
+        if (isset($param['group_param']['middleware'])) {
+            foreach ($param['group_param']['middleware'] as $value) {
+                /** @var Middleware $group */
+                $middleware = new $value;
+                if (($ret = $middleware->handle($request, $response)) !== true) {
+                    break;
+                }
+            }
+        }
+        if (is_null($ret) || $ret === true) {
+            $controller = $param['param']['controller'];
+            if (isset($param['group_param']['namespace'])) {
+                $controller = $param['group_param']['namespace'] . '\\' . $controller;
+            }
+            $ret = app()->call($controller, $param['uri_param']);
+        }
+        if (is_string($ret)) {
+            $response->header("content-type", "text/html;charset=utf8");
+            $response->write($ret);
         }
     }
 
     private static function merge_param($param1, $param2) {
         if (isset($param2['namespace'])) {
             if (isset($param1['namespace'])) {
-                $param1['namespace'] .= $param2['namespace'];
+                $param1['namespace'] .= '\\' . $param2['namespace'];
             } else {
                 $param1['namespace'] = $param2['namespace'];
             }
         }
         if (isset($param2['middleware'])) {
             if (isset($param1['middleware'])) {
-                array_push($param1['middleware'], $param2['middleware']);
+                array_merge($param1['middleware'], $param2['middleware']);
             } else {
                 $param1['middleware'] = $param2['middleware'];
             }
@@ -92,16 +134,14 @@ class Route {
     }
 
     private static function recursive_resolve(array $route, string $method, string $pathinfo, array &$param = []) {
-        if (!isset($route['method'][$method])) {
-            return false;
-        }
         $param = static::merge_param($param, $route['param'] ?? []);
-        foreach ($route['method'][$method] as $key => $value) {
+        foreach ($route['method'][$method] ?? [] as $key => $value) {
             if (($uri_param = static::resolve_uri($pathinfo, $key)) !== false) {
                 return [
                     'uri' => $key,
                     'param' => $route['method'][$method][$key],
-                    'uri_param' => $uri_param
+                    'uri_param' => $uri_param,
+                    'group_param' => $param
                 ];
             }
         }
@@ -118,9 +158,6 @@ class Route {
 
     private static function resolve_uri($pathinfo, $uri) {
         $uri = substr($uri, 0, 1) === '/' ? $uri : ('/' . $uri);
-        if (substr($pathinfo, strlen($pathinfo) - 1) !== '/') {
-            $pathinfo .= '/';
-        }
         $uri_param = [];
         //匹配参数,转换为正则表达式
         $regex = preg_replace_callback([
@@ -133,7 +170,7 @@ class Route {
             }
             return '(\w+)';
         }, $uri);
-        $regex = '^' . $regex . '$';
+        $regex = '^' . $regex . '[/]?$';
         if (!preg_match("|$regex|", $pathinfo, $matches)) {
             return false;
         }

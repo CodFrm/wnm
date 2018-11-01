@@ -8,6 +8,9 @@
  *============================
  */
 
+//这也是有加载顺序的,最好让权限验证的插件在最前边
+
 return [
-    \App\login\init::class
+    \App\login\init::class,
+    \App\nginx\nginx::class
 ];

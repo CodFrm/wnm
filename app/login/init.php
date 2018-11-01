@@ -18,8 +18,18 @@ use WNPanel\Core\Facade\Route;
 class init implements LoadInterface {
 
     public function init() {
-        Route::get('/', function () {
-            return '登录页面';
-        });
+        Route::group(function () {
+            Route::get('/', 'init@login');
+        })->namespace('App\\login');
+        Route::group('auth')->middleware(LoginAuth::class);
+    }
+
+    public function route() {
+        // TODO: Implement route() method.
+
+    }
+
+    public function login() {
+        return 'login';
     }
 }
