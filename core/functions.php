@@ -36,3 +36,36 @@ if (!function_exists('app')) {
         return Container::getInstance()->make($abstract, $parameter);
     }
 }
+
+if (!function_exists('read_config')) {
+    function read_config(string $key, $expire = 0) {
+        $result = \WNPanel\Core\Facade\Db::table('config')->get([
+            'key' => $key
+        ]);
+        $arr = $result->fetchArray();
+        if ($arr === false) {
+            return false;
+        }
+        if ($expire && $arr['time'] + $expire < time()) {
+            return false;
+        }
+        return $arr['value'];
+    }
+}
+
+if (!function_exists('write_config')) {
+    function write_config(string $key, string $value) {
+        if (read_config($key)) {
+            return \WNPanel\Core\Facade\Db::table('config')->where(['key' => $key])->update([
+                'value' => $value,
+                'time' => time()
+            ]);
+        } else {
+            return \WNPanel\Core\Facade\Db::table('config')->insert([
+                'key' => $key,
+                'value' => $value,
+                'time' => time()
+            ]);
+        }
+    }
+}

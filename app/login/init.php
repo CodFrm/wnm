@@ -19,7 +19,8 @@ class init implements LoadInterface {
 
     public function init() {
         Route::group(function () {
-            Route::get('/', 'init@login');
+            Route::any('/', 'Login@login');
+            Route::any('/login.php', 'Login@login');
         })->namespace('App\\login');
         Route::group('auth')->middleware(LoginAuth::class);
     }
@@ -29,7 +30,4 @@ class init implements LoadInterface {
 
     }
 
-    public function login() {
-        return 'login';
-    }
 }

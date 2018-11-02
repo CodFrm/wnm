@@ -18,6 +18,7 @@ class LoginAuth implements Middleware {
 
     public function handle(\swoole_http_request $request, \swoole_http_response $response) {
         // TODO: Implement handle() method.
+
         return true;
     }
 }

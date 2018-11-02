@@ -107,6 +107,10 @@ class Route {
             if (isset($param['group_param']['namespace'])) {
                 $controller = $param['group_param']['namespace'] . '\\' . $controller;
             }
+//            $param['uri_param']['_request'] = $request;
+//            $param['uri_param']['_response'] = $response;
+            app()->instance(\Swoole\Http\Request::class, $request);
+            app()->instance(\Swoole\Http\Response::class, $response);
             $ret = app()->call($controller, $param['uri_param']);
         }
         if (is_string($ret)) {
