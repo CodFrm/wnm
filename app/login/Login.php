@@ -40,8 +40,15 @@ class Login {
                 if ($user === $_request->post['user'] &&
                     $passwd === $this->encodePasswd($user, $_request->post['passwd'])) {
                     write_config('MB_TOKEN', $token = str_rand(32));
-                    Hook::add('MB_LOGIN', null, $_request, $_response);
                     $_response->cookie('MB_TOKEN', $token);
+                    if (($ret = Hook::add(MB_LOGIN, function ($ret) {
+                            if ($ret !== true) {
+                                return false;
+                            }
+                            return true;
+                        }, $_request, $_response)) !== true) {
+                        return $ret;
+                    };
                     return '登录成功';
                 } else {
                     return '账号或者密码错误';

@@ -28,7 +28,7 @@ class Application extends Container {
         $this->rootPath = $rootPath;
         $this->loadBaseComponent();
         $this->loadDatabase();
-        $this->initBasePlugin();
+//        $this->initBasePlugin();
     }
 
     public function run() {
@@ -57,6 +57,7 @@ class Application extends Container {
     protected function startServer() {
         $http = new \swoole_http_server("0.0.0.0", 8000);
         $http->on('workerstart', function (\swoole_server $server, $id) {
+            $this->initBasePlugin();
             $server->db = new sqlite($this->rootPath . '/storage/wnm.db');
             app()->instance('db', $server->db);
         });

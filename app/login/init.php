@@ -15,6 +15,8 @@ namespace App\login;
 use WNPanel\Core\App\LoadInterface;
 use WNPanel\Core\Facade\Route;
 
+define('MB_LOGIN', 'MB_LOGIN');
+
 class init implements LoadInterface {
 
     public function init() {

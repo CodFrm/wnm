@@ -27,10 +27,10 @@ class Hook {
      * @param mixed ...$param
      */
     public static function add(string $name, $callback, ...$param) {
-        foreach (static::$hook[$name] as $func) {
+        foreach (static::$hook[$name] ?? [] as $func) {
             $ret = call_user_func_array($func, $param);
-            if (is_null($callback) && call_user_func($callback, $ret) === false) {
-                return false;
+            if (!is_null($callback) && call_user_func($callback, $ret) === false) {
+                return $ret;
             }
         }
         return true;
