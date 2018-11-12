@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<form action="/login.php" method="post">
+<form action="/login" method="post">
     账号:<input name="user" type="text"><br>
     密码:<input name="passwd" type="password"><br>
     <button>登录</button>

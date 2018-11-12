@@ -12,5 +12,6 @@
 
 return [
     \App\login\init::class,
-    \App\nginx\nginx::class
+    \App\nginx\nginx::class,
+    \App\panel\panel::class
 ];

@@ -21,8 +21,7 @@ class init implements LoadInterface {
 
     public function init() {
         Route::group(function () {
-            Route::any('/', 'Login@login');
-            Route::any('/login.php', 'Login@login');
+            Route::any('/login', 'Login@login');
         })->namespace('App\\login');
         Route::group('auth')->middleware(LoginAuth::class);
     }

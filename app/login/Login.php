@@ -26,14 +26,13 @@ class Login {
         if (strtoupper($_request->server['request_method']) === 'GET') {
             return $this->view("view/login");
         } else {
-
-            $error_num = read_config('MB_LOGIN_ERROE_NUM' . $_request->server['remote_addr'], 1800);
+            $error_num = read_config('MB_LOGIN_ERROE_NUM_' . $_request->server['remote_addr'], 1800);
             $error_num = $error_num ?: 0;
-            if ($error_num >= 5 && read_config('MB_LOGIN_TIME' . $_request->server['remote_addr'], 1800)) {
+            if ($error_num >= 5 && read_config('MB_LOGIN_TIME_' . $_request->server['remote_addr'], 1800)) {
                 return '登录失败超过5次,请半小时后再试';
             }
-            write_config('MB_LOGIN_TIME' . $_request->server['remote_addr'], time());
-            write_config('MB_LOGIN_ERROE_NUM' . $_request->server['remote_addr'], $error_num + 1);
+            write_config('MB_LOGIN_TIME_' . $_request->server['remote_addr'], time());
+            write_config('MB_LOGIN_ERROE_NUM_' . $_request->server['remote_addr'], $error_num + 1);
             if (isset($_request->post['user']) && isset($_request->post['passwd'])) {
                 $user = read_config('MB_USER');
                 $passwd = read_config('MB_PASSWD');
@@ -48,7 +47,7 @@ class Login {
                             return true;
                         }, $_request, $_response)) !== true) {
                         return $ret;
-                    };
+                    }
                     return '登录成功';
                 } else {
                     return '账号或者密码错误';

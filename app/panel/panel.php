@@ -14,17 +14,23 @@ namespace App\panel;
 
 use WNPanel\Core\App\Hook;
 use WNPanel\Core\App\LoadInterface;
+use WNPanel\Core\Facade\Route;
 
 class panel implements LoadInterface {
 
     public function init() {
         // TODO: Implement init() method.
-        Hook::listen(MB_LOGIN, function () {
+        Hook::listen(MB_LOGIN, function (\swoole_http_request $_request, \swoole_http_response $_response) {
+            $_response->status(302);
+            $_response->header('location','/');
             return '登录成功，进入面板';
         });
     }
 
     public function route() {
         // TODO: Implement route() method.
+        Route::get('/',function () {
+            return '我是面板，哈哈';
+        });
     }
 }

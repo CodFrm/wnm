@@ -55,7 +55,7 @@ if (!function_exists('read_config')) {
 
 if (!function_exists('write_config')) {
     function write_config(string $key, string $value) {
-        if (read_config($key)) {
+        if (read_config($key) !== false) {
             return \WNPanel\Core\Facade\Db::table('config')->where(['key' => $key])->update([
                 'value' => $value,
                 'time' => time()
@@ -67,5 +67,13 @@ if (!function_exists('write_config')) {
                 'time' => time()
             ]);
         }
+    }
+}
+
+if (!function_exists('expire_config')) {
+    function expire_config(string $key) {
+        return \WNPanel\Core\Facade\Db::table('config')->where(['key' => $key])->update([
+            'time' => time()
+        ]);
     }
 }
