@@ -20,6 +20,7 @@ class panel implements LoadInterface {
 
     public function init() {
         // TODO: Implement init() method.
+        //HOOK登录成功，跳转到我们的面板
         Hook::listen(MB_LOGIN, function (\swoole_http_request $_request, \swoole_http_response $_response) {
             $_response->status(302);
             $_response->header('location','/');
@@ -29,8 +30,5 @@ class panel implements LoadInterface {
 
     public function route() {
         // TODO: Implement route() method.
-        Route::get('/',function () {
-            return '我是面板，哈哈';
-        });
     }
 }

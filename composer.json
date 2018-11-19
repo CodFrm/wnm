@@ -12,7 +12,8 @@
   "require": {
     "php": "^7.1",
     "huanlphp/container": "dev-master",
-    "ext-sqlite3": "*"
+    "ext-sqlite3": "*",
+    "ext-inotify": "*"
   },
   "require-dev": {
     "eaglewu/swoole-ide-helper": "dev-master",

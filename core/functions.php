@@ -77,3 +77,25 @@ if (!function_exists('expire_config')) {
         ]);
     }
 }
+
+if (!function_exists('env')) {
+    function env($key) {
+        static $env_array = [];
+        if (empty($env_array)) {
+            $tmp = fopen(app('root_path') . '/.env', 'r+');
+            if ($tmp) {
+                while ($str = fgets($tmp)) {
+                    $pos = strpos($str, '=');
+                    $env_array[substr($str, 0, $pos)] = trim(substr($str, $pos + 1));
+                }
+            }
+        }
+        return $env_array[$key] ?? '';
+    }
+}
+
+if (!function_exists('wnm_log')) {
+    function wnm_log($content) {
+        echo '[' . date('Y/m/d H:i:s') . ']' . $content . "\n";
+    }
+}
