@@ -23,12 +23,18 @@ class panel implements LoadInterface {
         //HOOK登录成功，跳转到我们的面板
         Hook::listen(MB_LOGIN, function (\swoole_http_request $_request, \swoole_http_response $_response) {
             $_response->status(302);
-            $_response->header('location','/');
+            $_response->header('location', '/');
             return '登录成功，进入面板';
         });
     }
 
     public function route() {
         // TODO: Implement route() method.
+        Route::group(function () {
+            Route::get('/', 'Controller@home');
+            Route::get('/wsocket', 'Controller@wsocket');
+        })->namespace('App\\panel');
     }
+
+
 }

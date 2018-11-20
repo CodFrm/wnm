@@ -74,6 +74,10 @@ class Application extends Container {
         swoole_event_add($notify_id, function () use ($notify_id) {
             $events = inotify_read($notify_id);
             if (!empty($events) && $this->setting['inotify_last_time'] <= time() - 2) {
+                if ($events[0]['mask'] != IN_DELETE) {
+                    return;
+                }
+                //TODO: 暂时先用IN_DELETE判断最后修改
                 wnm_log('notify file change reload');
                 $this->setting['inotify_last_time'] = time();
                 $this->server->reload();
@@ -108,18 +112,42 @@ class Application extends Container {
         app()->instance('db', $db);
     }
 
+    protected function bindWebSocket() {
+        $this->server->on('open', function (\swoole_websocket_server $server, \swoole_http_request $request) {
+            $response = new class extends \swoole_http_response {
+                public $code = 200;
+
+                public function status($http_code, $reason = NULL) {
+                    $this->code = $http_code;
+                }
+            };
+            Route::resolve($request, $response);
+            if ($response->code != 101) {
+                $server->disconnect($request->fd, 1000, 'Permission error');
+                return false;
+            }
+        });
+        $this->server->on('message', function (\swoole_websocket_server $server, \swoole_websocket_frame $frame) {
+            var_dump('message');
+        });
+    }
+
     protected function startServer() {
-        $this->server = new \swoole_http_server("0.0.0.0", 8000);
+        $this->server = new \swoole_websocket_server("0.0.0.0", 8000);
+        $this->bindWebSocket();
+        $this->server->set([
+            'document_root' => $this->rootPath . '/public',
+            'enable_static_handler' => true,
+            'worker_num' => 4,
+            'log_file' => $this->rootPath . '/storage/wnm-' . date('Y-m-d') . '.log'
+        ]);
         $this->server->on('workerstart', function (\swoole_server $server, $id) {
-            wnm_log('worker start' . $id);
+            wnm_log('worker start id:' . $id);
+            $this->instance('worker_id', $id);
             $this->initBasePlugin();
             $server->db = new sqlite($this->rootPath . '/storage/wnm.db');
             app()->instance('db', $server->db);
         });
-        $this->server->set([
-            'document_root' => $this->rootPath . '/public',
-            'enable_static_handler' => true,
-        ]);
         $this->server->on('request', function (\swoole_http_request $request, \swoole_http_response $response) {
             //TODO: deal route
             Route::resolve($request, $response);

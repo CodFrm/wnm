@@ -4,7 +4,7 @@
  * author:Farmer
  * time:18-10-31 下午3:09
  * blog:blog.icodef.com
- * function:需要加载的核心插件
+ * function:整个项目的一些核心设置
  *============================
  */
 
