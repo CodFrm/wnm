@@ -22,7 +22,6 @@ class LoginAuth implements Middleware {
         if ($token && $token === read_config('MB_TOKEN', 3600)) {
             expire_config('MB_TOKEN');
             return true;
-
         }
         $response->status(302);
         $response->header('Location', '/login');

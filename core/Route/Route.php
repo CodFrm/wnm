@@ -42,7 +42,7 @@ class Route {
         }
         if (is_string($func)) {
             static::$groupName = $func;
-            static::$group = new Group($func, static::$route);
+            static::$group = new Group($func, static::$group->quote_route);
             return static::$group;
         }
         static $n = 0;
@@ -51,8 +51,7 @@ class Route {
         $tmp_groupName = static::$groupName;
 
         static::$groupName = 'group_' . $n;
-        static::$route[$tmp_groupName]['group'] = [static::$groupName => []];
-        $group = new Group(static::$groupName, static::$route[$tmp_groupName]['group']);
+        $group = new Group(static::$groupName, static::$group->quote_route[$tmp_groupName]['group']);
 
         static::$group = $group;
         call_user_func($func, $group);

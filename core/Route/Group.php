@@ -14,9 +14,9 @@ namespace WNPanel\Core\Route;
 
 class Group extends Route {
 
-    protected $name = null;
+    public $name = null;
 
-    protected $quote_route = null;
+    public $quote_route = null;
 
     public function __construct($name, & $quote_route = []) {
         $this->name = $name;

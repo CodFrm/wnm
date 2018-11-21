@@ -8,13 +8,16 @@
     <title>Document</title>
 </head>
 <body>
+<div class="left">
+    <a href="#">菜单1</a>
+</div>
 
 <script>
     var ws = new WebSocket("ws://127.0.0.1:8000/wsocket");
-    ws.onopen=function () {
+    ws.onopen = function () {
         ws.send('test');
     }
-    ws.onclose=function () {
+    ws.onclose = function () {
         console.log('close');
     }
 </script>
