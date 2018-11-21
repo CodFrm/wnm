@@ -36,4 +36,36 @@ class Hook {
         return true;
     }
 
+    /**
+     * 设置嵌入内容
+     * @param string $name
+     * @param $value
+     */
+    public static function embed(string $name, $value, int $priority = 0) {
+        static::$hook[$name][] = [$value, $priority];
+    }
+
+    /**
+     * 设置嵌入点
+     * @param string $name
+     * @param $callback
+     * @param mixed ...$param
+     */
+    public static function embed_point(string $name, $callback, ...$param) {
+        $retList = [];
+        foreach (static::$hook[$name] ?? [] as $item) {
+            if ($item instanceof \Closure) {
+                $retList[$item[1]][] = call_user_func_array($item[0], $param);
+            } else {
+                $retList[$item[1]][] = $item[0];
+            }
+        }
+        $ret = '';
+        foreach ($retList as $items) {
+            foreach ($items as $item) {
+                $ret .= call_user_func_array($callback, [$item]);
+            }
+        }
+        return $ret;
+    }
 }

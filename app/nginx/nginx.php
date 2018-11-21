@@ -20,6 +20,10 @@ class nginx implements LoadInterface {
 
     public function init() {
         // TODO: Implement init() method.
+        Hook::embed(MB_LEFT_MENU, [
+            'title' => 'nginx',
+            'href' => '/nginx'
+        ]);
     }
 
     public function route() {

@@ -16,6 +16,8 @@ use WNPanel\Core\App\Hook;
 use WNPanel\Core\App\LoadInterface;
 use WNPanel\Core\Facade\Route;
 
+require 'util.php';
+
 class panel implements LoadInterface {
 
     public function init() {
