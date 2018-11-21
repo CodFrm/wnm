@@ -46,6 +46,8 @@ class Application extends Container {
         $this->setting = require $this->rootPath . '/config/setting.php';
         $this->pluginList = require $this->rootPath . '/config/plugin.php';
 
+        $this->instance('debug', $this->setting['debug']);
+
     }
 
     protected function enableDebug() {
@@ -67,7 +69,7 @@ class Application extends Container {
                 wnm_log('plugin:' . $item . ' ' . $e->getMessage());
                 return false;
             }
-            $dir = $this->path2dir($reflex->getFileName());
+            $dir = path2dir($reflex->getFileName());
             inotify_add_watch($notify_id, $dir, IN_CREATE | IN_DELETE | IN_MODIFY);
         }
         $this->setting['inotify_last_time'] = time();
@@ -83,10 +85,6 @@ class Application extends Container {
                 $this->server->reload();
             }
         });
-    }
-
-    private function path2dir($path) {
-        return substr($path, 0, strrpos($path, '/'));
     }
 
     public function run() {
@@ -128,7 +126,7 @@ class Application extends Container {
             }
         });
         $this->server->on('message', function (\swoole_websocket_server $server, \swoole_websocket_frame $frame) {
-            var_dump('message');
+            var_dump('websocket message');
         });
     }
 

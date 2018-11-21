@@ -11,13 +11,12 @@
 
 namespace App\panel;
 
+use WNPanel\Core\App\Controller as BaseController;
 
-class Controller {
+class Controller extends BaseController {
 
     public function home() {
-        ob_start();
-        require 'view/home.php';
-        return ob_get_clean();
+        return $this->view('view/home');
     }
 
     public function wsocket(\swoole_http_response $response) {

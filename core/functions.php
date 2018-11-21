@@ -99,3 +99,9 @@ if (!function_exists('wnm_log')) {
         echo '[' . date('Y/m/d H:i:s') . ']' . $content . "\n";
     }
 }
+
+if (!function_exists('path2dir')) {
+    function path2dir($path) {
+        return substr($path, 0, strrpos($path, '/'));
+    }
+}

@@ -11,6 +11,8 @@
 
 namespace WNPanel\Core\Route;
 
+use HuanL\Viewdeal\View;
+
 class Route {
 
     /**
@@ -115,6 +117,11 @@ class Route {
         }
         if (is_string($ret)) {
             $response->header("content-type", "text/html;charset=utf8");
+            $response->write($ret);
+        } else if ($ret instanceof View) {
+            $response->header("content-type", "text/html;charset=utf8");
+            $response->write($ret->execute());
+        } else if (method_exists($ret, '__toString')) {
             $response->write($ret);
         }
     }
