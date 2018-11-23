@@ -86,7 +86,13 @@ if (!function_exists('env')) {
             if ($tmp) {
                 while ($str = fgets($tmp)) {
                     $pos = strpos($str, '=');
-                    $env_array[substr($str, 0, $pos)] = trim(substr($str, $pos + 1));
+                    $value = trim(substr($str, $pos + 1));
+                    if ($value === 'true') {
+                        $value = true;
+                    } else if ($value === 'false') {
+                        $value = false;
+                    }
+                    $env_array[substr($str, 0, $pos)] = $value;
                 }
             }
         }

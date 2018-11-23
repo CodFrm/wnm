@@ -10,10 +10,15 @@
 
 use WNPanel\Core\App\Hook;
 
+define('MB_HTML_HEAD', 'mb_html_head');
 define('MB_LEFT_MENU', 'mb_left_menu');
+define('MB_PLUGIN', 'mb_plugin');
 
-function view_embed(string $name, string $format) {
+function view_embed(string $name, string $format = '') {
     return Hook::embed_point($name, function ($array) use ($format) {
+        if (empty($format)) {
+            return $array;
+        }
         return preg_replace_callback('/\[(.*?)\]/', function ($match) use ($array) {
             return $array[$match[1]] ?? '';
         }, $format);

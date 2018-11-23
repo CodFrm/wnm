@@ -1,0 +1,40 @@
+body {
+    overflow: hidden;
+}
+
+.left-nav {
+    border-top: 1px solid #505050;
+    width: 200px;
+    display: inline-block;
+    position: absolute;
+    top: 56px;
+    bottom: 0;
+}
+
+.left-nav .nav-link {
+    color: #fff;
+}
+
+.left-nav .nav-item .nav-link:hover {
+    background: #57575a;
+}
+
+.content {
+    position: absolute;
+    left: 200px;
+    top: 56px;
+    bottom: 0;
+    right: 0;
+}
+
+.nav-sub {
+    display: block;
+}
+
+.nav-sub .dropdown-item {
+    color: #fff;
+}
+
+.nav-item {
+
+}

@@ -105,8 +105,10 @@ class Route {
         }
         if (is_null($ret) || $ret === true) {
             $controller = $param['param']['controller'];
-            if (isset($param['group_param']['namespace'])) {
-                $controller = $param['group_param']['namespace'] . '\\' . $controller;
+            if (!($controller instanceof \Closure)){
+                if (isset($param['group_param']['namespace'])) {
+                    $controller = $param['group_param']['namespace'] . '\\' . $controller;
+                }
             }
 //            $param['uri_param']['_request'] = $request;
 //            $param['uri_param']['_response'] = $response;

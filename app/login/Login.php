@@ -59,7 +59,7 @@ class Login {
     }
 
     protected function encodePasswd($u, $p) {
-        return hash('sha256', $u . $p . 'MB_PWD');
+        return hash('sha256', $u . '|' . $p . 'MB_PWD');
     }
 
 }
