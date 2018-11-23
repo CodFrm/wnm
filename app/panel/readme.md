@@ -18,3 +18,8 @@
 <a class="dropdown-item" href="[link]">[title]</a>
 ```
 
+#### MB_SETTING
+设置子栏
+````html
+<a class="dropdown-item" href="[link]">[title]</a>
+````

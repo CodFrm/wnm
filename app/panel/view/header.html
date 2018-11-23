@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/home.css">
+
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_722334_1eourxb4n1di.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="js/home.js"></script>
+    {:view_embed(MB_HTML_HEAD)}
+    <title>Document</title>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <a class="navbar-brand" href="#">WNMPanel</a>
+</nav>
+
+<nav class="navbar-default navbar-collaps bg-dark navbar-dark left-nav">
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link" href="/"><i class="iconfont icon-home"></i> 首页</a>
+        </li>
+        {:view_embed(MB_LEFT_MENU,'<li class="nav-item"><a class="nav-link" href="[href]">[title]</a></li>')}
+        <li class="nav-item dropdown">
+            <a class="nav-link" href="#">
+                <i class="iconfont icon-soft"></i> 插件 <i class="iconfont icon-down" style="float: right;"></i>
+            </a>
+            <div class="nav-sub">
+                <a class="dropdown-item" href="/plugin-list">插件列表</a>
+                <a class="dropdown-item" href="/plugin-install">安装插件</a>
+                {:view_embed(MB_PLUGIN,'<a class="dropdown-item" href="[link]">[title]</a>')}
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link" href="#"><i class="iconfont icon-setting"></i> 设置 <i class="iconfont icon-down" style="float: right;"></i></a>
+            <div class="nav-sub">
+                <a class="dropdown-item" href="/setting">面板设置</a>
+                {:view_embed(MB_SETTING,'<a class="dropdown-item" href="[link]">[title]</a>')}
+            </div>
+        </li>
+    </ul>
+</nav>
+

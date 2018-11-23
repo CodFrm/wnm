@@ -112,6 +112,7 @@ class Route {
             }
 //            $param['uri_param']['_request'] = $request;
 //            $param['uri_param']['_response'] = $response;
+            app()->instance('route_uri',$param['uri']);
             app()->instance(\Swoole\Http\Request::class, $request);
             app()->instance(\Swoole\Http\Response::class, $response);
             $ret = app()->call($controller, $param['uri_param']);

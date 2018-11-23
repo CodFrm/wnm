@@ -28,7 +28,7 @@ body {
 }
 
 .nav-sub {
-    display: block;
+    display: none;
 }
 
 .nav-sub .dropdown-item {
