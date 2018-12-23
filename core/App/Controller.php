@@ -12,9 +12,9 @@
 namespace WNPanel\Core\App;
 
 
-class Controller {
+abstract class Controller {
 
-    protected static $classPath = '';
+    protected static $classPath = [];
 
     protected function view($template) {
         $view = new \HuanL\Viewdeal\View($this->getClassPath() . '/' . $template . '.html', $this);
@@ -25,10 +25,11 @@ class Controller {
     }
 
     protected function getClassPath() {
-        if (empty(static::$classPath)) {
+        $className = static::class;
+        if (!isset(static::$classPath[$className])) {
             $ref = new \ReflectionClass($this);
-            static::$classPath = path2dir($ref->getFileName());
+            static::$classPath[$className] = path2dir($ref->getFileName());
         }
-        return static::$classPath;
+        return static::$classPath[$className];
     }
 }

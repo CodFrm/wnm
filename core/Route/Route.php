@@ -105,14 +105,14 @@ class Route {
         }
         if (is_null($ret) || $ret === true) {
             $controller = $param['param']['controller'];
-            if (!($controller instanceof \Closure)){
+            if (!($controller instanceof \Closure)) {
                 if (isset($param['group_param']['namespace'])) {
                     $controller = $param['group_param']['namespace'] . '\\' . $controller;
                 }
             }
 //            $param['uri_param']['_request'] = $request;
 //            $param['uri_param']['_response'] = $response;
-            app()->instance('route_uri',$param['uri']);
+            app()->instance('route_uri', $param['uri']);
             app()->instance(\Swoole\Http\Request::class, $request);
             app()->instance(\Swoole\Http\Response::class, $response);
             $ret = app()->call($controller, $param['uri_param']);
@@ -147,9 +147,9 @@ class Route {
     }
 
     private static function recursive_resolve(array $route, string $method, string $pathinfo, array &$param = []) {
-        $param = static::merge_param($param, $route['param'] ?? []);
         foreach ($route['method'][$method] ?? [] as $key => $value) {
             if (($uri_param = static::resolve_uri($pathinfo, $key)) !== false) {
+                $param = static::merge_param($param, $route['param'] ?? []);
                 return [
                     'uri' => $key,
                     'param' => $route['method'][$method][$key],

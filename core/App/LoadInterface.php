@@ -12,8 +12,10 @@
 namespace WNPanel\Core\App;
 
 
+use WNPanel\Core\Route\Group;
+
 interface LoadInterface {
     public function init();
 
-    public function route();
+    public function route(Group $group);
 }

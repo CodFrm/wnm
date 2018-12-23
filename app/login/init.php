@@ -14,6 +14,7 @@ namespace App\login;
 
 use WNPanel\Core\App\LoadInterface;
 use WNPanel\Core\Facade\Route;
+use WNPanel\Core\Route\Group;
 
 define('MB_LOGIN', 'MB_LOGIN');
 
@@ -26,7 +27,7 @@ class init implements LoadInterface {
         Route::group('auth')->middleware(LoginAuth::class);
     }
 
-    public function route() {
+    public function route(Group $group) {
         // TODO: Implement route() method.
 
     }

@@ -166,8 +166,8 @@ class Application extends Container {
             $instance = new $value();
             if ($instance instanceof LoadInterface) {
                 $instance->init();
-                \WNPanel\Core\Facade\Route::group(function () use ($instance) {
-                    $instance->route();
+                \WNPanel\Core\Facade\Route::group(function ($group) use ($instance) {
+                    $instance->route($group);
                 });
             } else {
                 throw new \Exception($value . ' is error');

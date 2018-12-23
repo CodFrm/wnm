@@ -15,6 +15,7 @@ namespace App\nginx;
 use WNPanel\Core\App\Hook;
 use WNPanel\Core\App\LoadInterface;
 use WNPanel\Core\Facade\Route;
+use WNPanel\Core\Route\Group;
 
 class nginx implements LoadInterface {
 
@@ -26,10 +27,10 @@ class nginx implements LoadInterface {
         ]);
     }
 
-    public function route() {
+    public function route(Group $group) {
         // TODO: Implement route() method.
-        Route::get('/nginx', function () {
-            return 'nginx厉害了';
-        });
+        Route::group(function () {
+            Route::get('/nginx', 'Controller@home');
+        })->namespace('App\\nginx');
     }
 }

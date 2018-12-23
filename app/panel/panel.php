@@ -12,9 +12,11 @@
 namespace App\panel;
 
 
+use HuanL\Viewdeal\View;
 use WNPanel\Core\App\Hook;
 use WNPanel\Core\App\LoadInterface;
 use WNPanel\Core\Facade\Route;
+use WNPanel\Core\Route\Group;
 
 require 'util.php';
 
@@ -28,9 +30,10 @@ class panel implements LoadInterface {
             $_response->header('location', '/');
             return '登录成功，进入面板';
         });
+        View::setLayout(__DIR__ . '/view/layout.html');
     }
 
-    public function route() {
+    public function route(Group $group) {
         // TODO: Implement route() method.
         Route::group(function () {
             Route::get('/', 'Controller@home');
