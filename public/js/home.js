@@ -6,7 +6,7 @@ window.onload = function () {
     ws.onclose = function () {
         console.log('close');
     }
-    
+
     $('.dropdown').click(function () {
         $(this).find('.nav-sub').slideToggle().end();
     });

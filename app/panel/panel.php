@@ -18,7 +18,10 @@ use WNPanel\Core\App\LoadInterface;
 use WNPanel\Core\Facade\Route;
 use WNPanel\Core\Route\Group;
 
-require 'util.php';
+define('MB_HTML_HEAD', 'mb_html_head');
+define('MB_LEFT_MENU', 'mb_left_menu');
+define('MB_PLUGIN', 'mb_plugin');
+define('MB_SETTING', 'mb_setting');
 
 class panel implements LoadInterface {
 
@@ -41,5 +44,20 @@ class panel implements LoadInterface {
         })->namespace('App\\panel');
     }
 
-
+    /**
+     * active demo 暂时没有想去实现
+     * @param array $param
+     * @param string $html
+     * @return string|string[]|null
+     * @throws \HuanL\Container\InstantiationException
+     */
+    public function isurl($param = [], $html = '') {
+        $html = $html[0] ?? '';
+        $req = app(\Swoole\Http\Request::class);
+        $info = $req->server['path_info'];
+        if (substr($param['href'], 0, strlen($info)) == $info) {
+            $html = preg_replace('#class="(.*?)"#', 'class="$1 active"', $html);
+        }
+        return $html;
+    }
 }

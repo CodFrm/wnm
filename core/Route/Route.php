@@ -11,8 +11,6 @@
 
 namespace WNPanel\Core\Route;
 
-use HuanL\Viewdeal\View;
-
 class Route {
 
     /**
@@ -83,8 +81,7 @@ class Route {
         foreach (static::$route as $value) {
             $param = $value['param'] ?? [];
             if (($param = static::recursive_resolve($value, $method, $request->server['path_info'], $param)) !== false) {
-                static::deal_controller($request, $response, $param);
-                return true;
+                return static::deal_controller($request, $response, $param);
             }
         }
         $response->status(404);
@@ -117,15 +114,7 @@ class Route {
             app()->instance(\Swoole\Http\Response::class, $response);
             $ret = app()->call($controller, $param['uri_param']);
         }
-        if (is_string($ret)) {
-            $response->header("content-type", "text/html;charset=utf8");
-            $response->write($ret);
-        } else if ($ret instanceof View) {
-            $response->header("content-type", "text/html;charset=utf8");
-            $response->write($ret->execute());
-        } else if (method_exists($ret, '__toString')) {
-            $response->write($ret);
-        }
+        return $ret;
     }
 
     private static function merge_param($param1, $param2) {

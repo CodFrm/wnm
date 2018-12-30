@@ -111,3 +111,22 @@ if (!function_exists('path2dir')) {
         return substr($path, 0, strrpos($path, '/'));
     }
 }
+
+if (!function_exists('view_embed')) {
+    function view_embed(string $name, $format = null, ...$param) {
+        return \WNPanel\Core\App\Hook::embed_point($name, function ($array) use ($format, $param) {
+            if (empty($format)) {
+                return $array;
+            }
+            if (is_string($format)) {
+                return preg_replace_callback('/\[(.*?)\]/', function ($match) use ($array) {
+                    return $array[$match[1]] ?? '';
+                }, $format);
+            } else if (is_callable($format)) {
+                return preg_replace_callback('/\[(.*?)\]/', function ($match) use ($array) {
+                    return $array[$match[1]] ?? '';
+                }, call_user_func_array($format, [$array, $param]));
+            }
+        });
+    }
+}

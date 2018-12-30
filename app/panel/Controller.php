@@ -21,5 +21,6 @@ class Controller extends BaseController {
 
     public function wsocket(\swoole_http_response $response) {
         $response->status(101);
+        return WebSocketAction::class;
     }
 }

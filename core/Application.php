@@ -13,7 +13,9 @@ namespace WNPanel\Core;
 
 
 use HuanL\Container\Container;
+use HuanL\Viewdeal\View;
 use WNPanel\Core\App\LoadInterface;
+use WNPanel\Core\App\WSActionInterface;
 use WNPanel\Core\Db\sqlite;
 use WNPanel\Core\Route\Route;
 
@@ -111,7 +113,10 @@ class Application extends Container {
     }
 
     protected function bindWebSocket() {
-        $this->server->on('open', function (\swoole_websocket_server $server, \swoole_http_request $request) {
+        $shared_table = new \swoole_table(8);
+        $shared_table->column('classname', \swoole_table::TYPE_STRING, 64);
+        $shared_table->create();
+        $this->server->on('open', function (\swoole_websocket_server $server, \swoole_http_request $request) use ($shared_table) {
             $response = new class extends \swoole_http_response {
                 public $code = 200;
 
@@ -119,14 +124,21 @@ class Application extends Container {
                     $this->code = $http_code;
                 }
             };
-            Route::resolve($request, $response);
+            $ret = Route::resolve($request, $response);
             if ($response->code != 101) {
                 $server->disconnect($request->fd, 1000, 'Permission error');
                 return false;
             }
+            $reflectionClass = new \ReflectionClass($ret);
+            if (in_array(WSActionInterface::class, $reflectionClass->getInterfaceNames())) {
+                $shared_table->set($request->fd, ['classname' => $ret]);
+            }
         });
-        $this->server->on('message', function (\swoole_websocket_server $server, \swoole_websocket_frame $frame) {
-            var_dump('websocket message');
+        $this->server->on('message', function (\swoole_websocket_server $server, \swoole_websocket_frame $frame) use ($shared_table) {
+            if ($shared_table->exist($frame->fd)) {
+                $class = $shared_table->get($frame->fd, 'classname');
+                call_user_func_array([$class, 'action'], [$server, $frame]);
+            }
         });
     }
 
@@ -148,7 +160,16 @@ class Application extends Container {
         });
         $this->server->on('request', function (\swoole_http_request $request, \swoole_http_response $response) {
             //TODO: deal route
-            Route::resolve($request, $response);
+            $ret = Route::resolve($request, $response);
+            if (is_string($ret)) {
+                $response->header("content-type", "text/html;charset=utf8");
+                $response->write($ret);
+            } else if ($ret instanceof View) {
+                $response->header("content-type", "text/html;charset=utf8");
+                $response->write($ret->execute());
+            } else if (method_exists($ret, '__toString')) {
+                $response->write($ret);
+            }
             $response->end();
         });
         $this->server->on('start', function () {
