@@ -42,14 +42,13 @@ if (!function_exists('read_config')) {
         $result = \WNPanel\Core\Facade\Db::table('config')->get([
             'key' => $key
         ]);
-        $arr = $result->fetchArray();
-        if ($arr === false) {
+        if ($result === false) {
             return false;
         }
-        if ($expire && $arr['time'] + $expire < time()) {
+        if ($expire && $result['time'] + $expire < time()) {
             return false;
         }
-        return $arr['value'];
+        return $result['value'];
     }
 }
 

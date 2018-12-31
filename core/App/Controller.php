@@ -19,7 +19,7 @@ abstract class Controller {
     protected function view($template) {
         $view = new \HuanL\Viewdeal\View($this->getClassPath() . '/' . $template . '.html', $this);
         if (app('debug') !== true) {
-            $view->setCacheDir(app('root_path') . '/storage/view');
+            $view->setCacheDir(app('root_path') . '/storage/cache/view');
         }
         return $view;
     }

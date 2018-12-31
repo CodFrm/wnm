@@ -12,13 +12,13 @@
 namespace App\login;
 
 
-use WNPanel\Core\App\LoadInterface;
+use WNPanel\Core\App\PluginInterface;
 use WNPanel\Core\Facade\Route;
 use WNPanel\Core\Route\Group;
 
 define('MB_LOGIN', 'MB_LOGIN');
 
-class init implements LoadInterface {
+class init implements PluginInterface {
 
     public function init() {
         Route::group(function () {
@@ -36,7 +36,7 @@ class init implements LoadInterface {
      * 安装插件
      * @return mixed
      */
-    public function install() {
+    public static function install() {
         // TODO: Implement install() method.
     }
 
@@ -44,15 +44,23 @@ class init implements LoadInterface {
      * 卸载插件
      * @return mixed
      */
-    public function uninstall() {
+    public static function uninstall() {
         // TODO: Implement uninstall() method.
+    }
+
+    /**
+     * 开启插件
+     * @return mixed
+     */
+    public static function enable() {
+        // TODO: Implement enable() method.
     }
 
     /**
      * 关闭插件
      * @return mixed
      */
-    public function close() {
-        // TODO: Implement close() method.
+    public static function disable() {
+        // TODO: Implement disable() method.
     }
 }

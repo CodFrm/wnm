@@ -13,11 +13,11 @@ namespace App\nginx;
 
 
 use WNPanel\Core\App\Hook;
-use WNPanel\Core\App\LoadInterface;
+use WNPanel\Core\App\PluginInterface;
 use WNPanel\Core\Facade\Route;
 use WNPanel\Core\Route\Group;
 
-class nginx implements LoadInterface {
+class nginx implements PluginInterface {
 
     public function init() {
         // TODO: Implement init() method.
@@ -30,6 +30,7 @@ class nginx implements LoadInterface {
     public function route(Group $group) {
         // TODO: Implement route() method.
         Route::get('/nginx', 'Controller@home');
+        Route::get('/nginx', 'Controller@home');
         $group->namespace('App\\nginx');
     }
 
@@ -37,7 +38,7 @@ class nginx implements LoadInterface {
      * 安装插件
      * @return mixed
      */
-    public function install() {
+    public static function install() {
         // TODO: Implement install() method.
     }
 
@@ -45,15 +46,23 @@ class nginx implements LoadInterface {
      * 卸载插件
      * @return mixed
      */
-    public function uninstall() {
+    public static function uninstall() {
         // TODO: Implement uninstall() method.
+    }
+
+    /**
+     * 开启插件
+     * @return mixed
+     */
+    public static function enable() {
+        // TODO: Implement enable() method.
     }
 
     /**
      * 关闭插件
      * @return mixed
      */
-    public function close() {
-        // TODO: Implement close() method.
+    public static function disable() {
+        // TODO: Implement disable() method.
     }
 }

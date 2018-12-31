@@ -13,10 +13,13 @@ namespace WNPanel\Core;
 
 
 use HuanL\Container\Container;
+use HuanL\SSH2\ssh;
 use HuanL\Viewdeal\View;
-use WNPanel\Core\App\LoadInterface;
+use WNPanel\Core\App\PluginInterface;
 use WNPanel\Core\App\WSActionInterface;
 use WNPanel\Core\Db\sqlite;
+use WNPanel\Core\Helpers\Plugin;
+use WNPanel\Core\Helpers\System;
 use WNPanel\Core\Route\Route;
 
 require 'functions.php';
@@ -95,9 +98,24 @@ class Application extends Container {
 
     protected function loadBaseComponent() {
         $this->singleton('route', Route::class);
+        $this->initSSH();
+    }
+
+    protected function initSSH() {
+        $ssh = new ssh('localhost', System::ssh_port());
+        if (!$ssh->connect()) {
+            throw new \Exception('ssh connect error,please open the ssh service');
+        }
+        //TODO:暂时直接用root权限,后面感觉需要用其他操作改一下
+        if (!$ssh->login_pubkey('root', $this->rootPath . '/storage/secret/rsa.pub', $this->rootPath . '/storage/secret/rsa.pri')) {
+            throw new \Exception('ssh secret key error');
+        }
+        $this->instance(ssh::class, $ssh);
+        $this->alias('ssh', ssh::class);
     }
 
     protected function loadDatabase() {
+        //TODO:数据库需要一些密码等权限操作
         $db = new sqlite($this->rootPath . '/storage/wnm.db', function (sqlite $db) {
             //TODO: Create Table
             $dbcontent = explode(';', file_get_contents($this->rootPath . "/storage/db.sql"));
@@ -147,6 +165,7 @@ class Application extends Container {
     }
 
     protected function startServer() {
+        $this->initBasePlugin();
         $this->server = new \swoole_websocket_server("0.0.0.0", 8000);
         $this->bindWebSocket();
         $this->server->set([
@@ -158,7 +177,6 @@ class Application extends Container {
         $this->server->on('workerstart', function (\swoole_server $server, $id) {
             wnm_log('worker start id:' . $id);
             $this->instance('worker_id', $id);
-            $this->initBasePlugin();
             $server->db = new sqlite($this->rootPath . '/storage/wnm.db');
             app()->instance('db', $server->db);
         });
@@ -187,9 +205,12 @@ class Application extends Container {
 
     protected function initBasePlugin() {
         foreach ($this->pluginList as $value) {
-            /** @var LoadInterface $instance */
+            /** @var PluginInterface $instance */
             $instance = new $value();
-            if ($instance instanceof LoadInterface) {
+            if ($instance instanceof PluginInterface) {
+                if (!Plugin::isenable($value)) {
+                    Plugin::install($value, Plugin::SOURCE_CORE);
+                }
                 $instance->init();
                 \WNPanel\Core\Facade\Route::group(function ($group) use ($instance) {
                     $instance->route($group);

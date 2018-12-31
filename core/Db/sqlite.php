@@ -61,7 +61,7 @@ class sqlite {
 
     /**
      * @param array $where
-     * @return bool|\SQLite3Result
+     * @return bool|array
      */
     public function get(array $where) {
         $this->sql = 'select * from ' . $this->table . ' where ';
@@ -74,7 +74,7 @@ class sqlite {
         $this->sql .= ' limit 1';
         if ($stmt = $this->prepare($this->sql, $values)) {
             if ($result = $stmt->execute()) {
-                return $result;
+                return $result->fetchArray();
             }
             return false;
         }
@@ -82,13 +82,7 @@ class sqlite {
     }
 
     public function insert(array $values) {
-        $this->sql = 'insert into ' . $this->table . '(`' . implode('`,`', array_keys($values)) . '`) values(';
-        foreach ($values as $value) {
-            $this->sql .= '?,';
-            $param[] = $value;
-        }
-        $this->sql = substr($this->sql, 0, strlen($this->sql) - 1);
-        $this->sql .= ')';
+        $this->_insert($values, $param);
         if ($stmt = $this->prepare($this->sql, $param)) {
             if ($stmt->execute()->finalize()) {
                 return static::$db->changes();
@@ -96,6 +90,16 @@ class sqlite {
             return false;
         }
         return false;
+    }
+
+    protected function _insert(array $values, &$param) {
+        $this->sql = 'insert into ' . $this->table . '(`' . implode('`,`', array_keys($values)) . '`) values(';
+        foreach ($values as $value) {
+            $this->sql .= '?,';
+            $param[] = $value;
+        }
+        $this->sql = substr($this->sql, 0, strlen($this->sql) - 1);
+        $this->sql .= ')';
     }
 
     public function where(array $where) {

@@ -14,8 +14,9 @@ namespace App\panel;
 
 use HuanL\Viewdeal\View;
 use WNPanel\Core\App\Hook;
-use WNPanel\Core\App\LoadInterface;
+use WNPanel\Core\App\PluginInterface;
 use WNPanel\Core\Facade\Route;
+use WNPanel\Core\Helpers\System;
 use WNPanel\Core\Route\Group;
 
 define('MB_HTML_HEAD', 'mb_html_head');
@@ -23,7 +24,7 @@ define('MB_LEFT_MENU', 'mb_left_menu');
 define('MB_PLUGIN', 'mb_plugin');
 define('MB_SETTING', 'mb_setting');
 
-class panel implements LoadInterface {
+class panel implements PluginInterface {
 
     public function init() {
         // TODO: Implement init() method.
@@ -64,24 +65,32 @@ class panel implements LoadInterface {
      * 安装插件
      * @return mixed
      */
-    public function install() {
+    public static function install() {
         // TODO: Implement install() method.
-
+        var_dump(System::copy_dir(__DIR__ . '/static', app('root_path') . '/public'));
     }
 
     /**
      * 卸载插件
      * @return mixed
      */
-    public function uninstall() {
+    public static function uninstall() {
         // TODO: Implement uninstall() method.
+    }
+
+    /**
+     * 开启插件
+     * @return mixed
+     */
+    public static function enable() {
+        // TODO: Implement enable() method.
     }
 
     /**
      * 关闭插件
      * @return mixed
      */
-    public function close() {
-        // TODO: Implement close() method.
+    public static function disable() {
+        // TODO: Implement disable() method.
     }
 }

@@ -14,31 +14,37 @@ namespace WNPanel\Core\App;
 
 use WNPanel\Core\Route\Group;
 
-interface LoadInterface {
+interface PluginInterface {
 
     /**
      * 安装插件
      * @return mixed
      */
-    public function install();
+    public static function install();
 
     /**
      * 卸载插件
      * @return mixed
      */
-    public function uninstall();
+    public static function uninstall();
+
+    /**
+     * 开启插件
+     * @return mixed
+     */
+    public static function enable();
+
+    /**
+     * 关闭插件
+     * @return mixed
+     */
+    public static function disable();
 
     /**
      * 插件初始化
      * @return mixed
      */
     public function init();
-
-    /**
-     * 关闭插件
-     * @return mixed
-     */
-    public function close();
 
     /**
      * 插件路由群组
