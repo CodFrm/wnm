@@ -129,9 +129,13 @@ class Application extends Container {
                 $server->disconnect($request->fd, 1000, 'Permission error');
                 return false;
             }
-            $reflectionClass = new \ReflectionClass($ret);
-            if (in_array(WSActionInterface::class, $reflectionClass->getInterfaceNames())) {
-                $shared_table->set($request->fd, ['classname' => $ret]);
+            try {
+                $reflectionClass = new \ReflectionClass($ret);
+                if (in_array(WSActionInterface::class, $reflectionClass->getInterfaceNames())) {
+                    $shared_table->set($request->fd, ['classname' => $ret]);
+                }
+            } catch (\Throwable $exception) {
+
             }
         });
         $this->server->on('message', function (\swoole_websocket_server $server, \swoole_websocket_frame $frame) use ($shared_table) {
@@ -149,7 +153,7 @@ class Application extends Container {
             'document_root' => $this->rootPath . '/public',
             'enable_static_handler' => true,
             'worker_num' => 4,
-            'log_file' => $this->rootPath . '/storage/wnm-' . date('Y-m-d') . '.log'
+            'log_file' => $this->rootPath . '/storage/log/wnm-' . date('Y-m-d') . '.log'
         ]);
         $this->server->on('workerstart', function (\swoole_server $server, $id) {
             wnm_log('worker start id:' . $id);

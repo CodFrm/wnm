@@ -32,4 +32,27 @@ class init implements LoadInterface {
 
     }
 
+    /**
+     * 安装插件
+     * @return mixed
+     */
+    public function install() {
+        // TODO: Implement install() method.
+    }
+
+    /**
+     * 卸载插件
+     * @return mixed
+     */
+    public function uninstall() {
+        // TODO: Implement uninstall() method.
+    }
+
+    /**
+     * 关闭插件
+     * @return mixed
+     */
+    public function close() {
+        // TODO: Implement close() method.
+    }
 }

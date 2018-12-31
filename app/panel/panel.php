@@ -38,10 +38,9 @@ class panel implements LoadInterface {
 
     public function route(Group $group) {
         // TODO: Implement route() method.
-        Route::group(function () {
-            Route::get('/', 'Controller@home');
-            Route::get('/wsocket', 'Controller@wsocket');
-        })->namespace('App\\panel');
+        Route::get('/', 'Controller@home');
+        Route::get('/wsocket', 'Controller@wsocket');
+        $group->namespace('App\\panel');
     }
 
     /**
@@ -59,5 +58,30 @@ class panel implements LoadInterface {
             $html = preg_replace('#class="(.*?)"#', 'class="$1 active"', $html);
         }
         return $html;
+    }
+
+    /**
+     * 安装插件
+     * @return mixed
+     */
+    public function install() {
+        // TODO: Implement install() method.
+
+    }
+
+    /**
+     * 卸载插件
+     * @return mixed
+     */
+    public function uninstall() {
+        // TODO: Implement uninstall() method.
+    }
+
+    /**
+     * 关闭插件
+     * @return mixed
+     */
+    public function close() {
+        // TODO: Implement close() method.
     }
 }

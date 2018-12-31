@@ -29,8 +29,31 @@ class nginx implements LoadInterface {
 
     public function route(Group $group) {
         // TODO: Implement route() method.
-        Route::group(function () {
-            Route::get('/nginx', 'Controller@home');
-        })->namespace('App\\nginx');
+        Route::get('/nginx', 'Controller@home');
+        $group->namespace('App\\nginx');
+    }
+
+    /**
+     * 安装插件
+     * @return mixed
+     */
+    public function install() {
+        // TODO: Implement install() method.
+    }
+
+    /**
+     * 卸载插件
+     * @return mixed
+     */
+    public function uninstall() {
+        // TODO: Implement uninstall() method.
+    }
+
+    /**
+     * 关闭插件
+     * @return mixed
+     */
+    public function close() {
+        // TODO: Implement close() method.
     }
 }

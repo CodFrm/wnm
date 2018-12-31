@@ -15,7 +15,7 @@
     "ext-sqlite3": "*",
     "ext-inotify": "*",
     "huanlphp/viewdeal": "dev-master",
-    "ext-ssh2": "*"
+    "huanlphp/ssh2": "dev-master"
   },
   "require-dev": {
     "eaglewu/swoole-ide-helper": "dev-master",
