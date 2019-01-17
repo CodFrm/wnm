@@ -13,14 +13,14 @@ namespace WNPanel\Core;
 
 
 use HuanL\Container\Container;
-use HuanL\SSH2\ssh;
+use HuanL\SSH2\command;
 use HuanL\Viewdeal\View;
 use WNPanel\Core\App\PluginInterface;
 use WNPanel\Core\App\WSActionInterface;
-use WNPanel\Core\Db\sqlite;
+use WNPanel\Core\Component\Db\sqlite;
 use WNPanel\Core\Helpers\Plugin;
 use WNPanel\Core\Helpers\System;
-use WNPanel\Core\Route\Route;
+use WNPanel\Core\Component\Route\Route;
 
 require 'functions.php';
 
@@ -102,16 +102,16 @@ class Application extends Container {
     }
 
     protected function initSSH() {
-        $ssh = new ssh('localhost', System::ssh_port());
-        if (!$ssh->connect()) {
-            throw new \Exception('ssh connect error,please open the ssh service');
+
+        $commond = new command();
+        if ($ssh = $commond->initSSH('localhost', System::ssh_port())) {
+            //TODO:暂时直接用root权限,后面感觉需要用其他操作改一下
+            if (!$ssh->login_pubkey('root', $this->rootPath . '/storage/secret/rsa.pub', $this->rootPath . '/storage/secret/rsa.pri')) {
+                $commond->clearSSH();
+            }
         }
-        //TODO:暂时直接用root权限,后面感觉需要用其他操作改一下
-        if (!$ssh->login_pubkey('root', $this->rootPath . '/storage/secret/rsa.pub', $this->rootPath . '/storage/secret/rsa.pri')) {
-            throw new \Exception('ssh secret key error');
-        }
-        $this->instance(ssh::class, $ssh);
-        $this->alias('ssh', ssh::class);
+        $this->instance(command::class, $commond);
+        $this->alias('command', command::class);
     }
 
     protected function loadDatabase() {

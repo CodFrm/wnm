@@ -12,7 +12,7 @@
 namespace App\login;
 
 
-use WNPanel\Core\Route\Middleware;
+use WNPanel\Core\Component\Route\Middleware;
 
 class LoginAuth implements Middleware {
 

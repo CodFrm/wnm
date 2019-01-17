@@ -13,10 +13,10 @@ namespace WNPanel\Core\Facade;
 
 
 /**
- * @method static \WNPanel\Core\Route\Route get(string $url, $controller)
- * @method static \WNPanel\Core\Route\Route post(string $url, $controller)
- * @method static \WNPanel\Core\Route\Route any(string $url, $controller)
- * @method static \WNPanel\Core\Route\Group group(\Closure $func = null)
+ * @method static \WNPanel\Core\Component\Route\Route get(string $url, $controller)
+ * @method static \WNPanel\Core\Component\Route\Route post(string $url, $controller)
+ * @method static \WNPanel\Core\Component\Route\Route any(string $url, $controller)
+ * @method static \WNPanel\Core\Component\Route\Group group(\Closure $func = null)
  * Class Route
  * @package WNPanel\Core\Facade
  */

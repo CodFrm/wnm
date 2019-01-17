@@ -12,7 +12,7 @@
 namespace WNPanel\Core\Helpers;
 
 
-use HuanL\SSH2\ssh;
+use HuanL\SSH2\command;
 
 class System extends Helper {
 
@@ -96,8 +96,8 @@ class System extends Helper {
     }
 
     public static function exec($command) {
-        /** @var ssh $ssh */
-        $ssh = app('ssh');
+        /** @var command $ssh */
+        $ssh = app('command');
         return $ssh->exec($command);
     }
 

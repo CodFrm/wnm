@@ -11,7 +11,7 @@
 
 namespace WNPanel\Core\Facade;
 
-use WNPanel\Core\Db\sqlite;
+use WNPanel\Core\Component\Db\sqlite;
 
 /**
  * @method static sqlite table(string $table)

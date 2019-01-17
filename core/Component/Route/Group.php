@@ -9,7 +9,7 @@
  */
 
 
-namespace WNPanel\Core\Route;
+namespace WNPanel\Core\Component\Route;
 
 
 class Group extends Route {

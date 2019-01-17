@@ -14,7 +14,7 @@ namespace App\login;
 
 use WNPanel\Core\App\PluginInterface;
 use WNPanel\Core\Facade\Route;
-use WNPanel\Core\Route\Group;
+use WNPanel\Core\Component\Route\Group;
 
 define('MB_LOGIN', 'MB_LOGIN');
 

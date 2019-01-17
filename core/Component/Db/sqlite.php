@@ -8,7 +8,7 @@
  *============================
  */
 
-namespace WNPanel\Core\Db;
+namespace WNPanel\Core\Component\Db;
 
 use SQLite3;
 

@@ -17,7 +17,7 @@ use WNPanel\Core\App\Hook;
 use WNPanel\Core\App\PluginInterface;
 use WNPanel\Core\Facade\Route;
 use WNPanel\Core\Helpers\System;
-use WNPanel\Core\Route\Group;
+use WNPanel\Core\Component\Route\Group;
 
 define('MB_HTML_HEAD', 'mb_html_head');
 define('MB_LEFT_MENU', 'mb_left_menu');

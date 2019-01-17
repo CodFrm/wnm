@@ -15,7 +15,7 @@ namespace App\nginx;
 use WNPanel\Core\App\Hook;
 use WNPanel\Core\App\PluginInterface;
 use WNPanel\Core\Facade\Route;
-use WNPanel\Core\Route\Group;
+use WNPanel\Core\Component\Route\Group;
 
 class nginx implements PluginInterface {
 

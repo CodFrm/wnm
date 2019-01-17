@@ -12,7 +12,7 @@
 namespace WNPanel\Core\App;
 
 
-use WNPanel\Core\Route\Group;
+use WNPanel\Core\Component\Route\Group;
 
 interface PluginInterface {
 
